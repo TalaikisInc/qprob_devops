@@ -33,7 +33,6 @@ def set_environments():
     Sets required environment variables.
     """
     proc = Poepn("export LD_LIBRARY_PATH=/usr/local/anaconda/lib:$LD_LIBRARY_PATH")
-    proc = Poepn("MYSQL_ROOT_PASSWORD={}".format(settings.MYSQL_ROOT_PASSSWORD))    
     return process_output(proc=proc)
 
 
@@ -56,11 +55,9 @@ def install_python():
     return process_output(proc=proc)
 
 
-def install_image_manage,ent():
+def install_image_manageent():
     proc = Popen("sudo apt install libpng-dev zlib1g-dev -y")
-    proc = Popen("")
-    proc = Popen("")
-    proc = Popen("")
+    return process_output(proc=proc)
 
 
 def cd_to_project(proj):
@@ -222,8 +219,14 @@ def update_system():
 
 
 def mysql_deps():
-    proc = Poepn("sudo apt install libmysqlclient-dev expect mysql-server -y")
-    sudo mysql_secure_installation
+    proc = Popen("sudo apt install libmysqlclient-dev mysql-server -y")
+    proc = Poepn("export MYSQL_ROOT_PASSWORD={}".format(settings.MYSQL_ROOT_PASSSWORD))    
+    proc = Popen("mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" -e \"UPDATE mysql.user SET Password=PASSWORD('$MYSQL_ROOT_PASSWORD') WHERE User='root'\"")
+    proc = Popen("mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" -e \"DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')\"")
+    proc = Popen("mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" -e \"DELETE FROM mysql.user WHERE User=''\"")
+    proc = Popen("mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" -e \"DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'\"")
+    proc = Popen("mysql -u root -p\"$MYSQL_ROOT_PASSWORD\" -e \"FLUSH PRIVILEGES\"")
+    return process_output(proc=proc)
 
     
 def install_elastic_search():
@@ -234,12 +237,14 @@ def install_elastic_search():
     proc = Poepn("sudo update-rc.d elasticsearch defaults 95 10")
     proc = Poepn("sudo /etc/init.d/elasticsearch start")
     proc = Poepn("sudo cp /home/$PROJECT/monitrc /etc/monit/monitrc")
+    return process_output(proc=proc)
 
 
 #TODO NOT implemented
 def setup_system(request):
     """Set ups and prepares the bare metal server for QPreob."""
     update_system()
+    # ALL THE THINGS ABOVE
 
 
 #TODO NOT implemented
